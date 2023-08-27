@@ -13,4 +13,29 @@ the double curly-brackets and url_for() method. -->
     </div>
 </div>
 
+<div class="row">
+    <!-- loop start -->
+    {% for category in categories %}
+    <div class="col s12 m6 l3">
+      <div class="card light-blue darken-4 center-align">
+        <div class="card-content white-text">
+            <!-- Finally, we need to display the actual category name that's stored within our database, so
+we can update the card-title.
+Since we are within a for-loop, we need to use the newly defined index variable of 'category'.
+We also need to use dot-notation and tell it which key should be printed here, so in
+this case, it should be 'category.category_name', which means, “this category’s key of category_name”.
+If you wanted to show the primary key instead, that's stored within our database as 'id',
+so it would be 'category.id' for example. -->
+          <span class="card-title">{{ category.category_name }}</span>
+        </div>
+        <div class="card-action">
+          <a href="#" class="btn green accent-4">Edit</a>
+          <a href="#" class="btn red">Delete</a>
+        </div>
+      </div>
+    </div>
+    <!-- loop end -->
+    {% endfor %}
+  </div>
+
 {% endblock %}
