@@ -46,3 +46,28 @@ def add_category():
         db.session.commit()
         return redirect(url_for("categories"))
     return render_template("add_category.html")
+
+
+
+# Now, we can head back over to the routes.py file, and since we've given an argument of
+# 'category_id' when clicking the 'Edit' button, this also needs to appear in our app.route.
+# These types of variables being passed back into our Python functions must be wrapped
+# inside of angle-brackets within the URL.
+# We know that all of our primary keys will be integers, so we can cast this as an 'int'.
+@app.route("/edit_category/<int:category_id>", methods=["GET", "POST"])
+def edit_category(category_id):
+#     In order for this function to know which specific category to load, we need to attempt to find
+# one in the database using the ID provided from the URL.
+# The template is expecting a variable 'category', so let's create that new variable now.
+# Using the imported Category model from the top of the file, we need to query the database,
+# and this time we know a specific record we'd like to retrieve.
+# There's a SQLAlchemy method called '.get_or_404()', which takes the argument of 'category_id'.
+# What this does is query the database and attempts to find the specified record using the data
+# provided, and if no match is found, it will trigger a 404 error page.
+    category = Category.query.get_or_404(category_id)
+    # Update name of categories
+    if request.method == "POST":
+        category.category_name = request.form.get("category_name")
+        db.session.commit()
+        return redirect(url_for("categories"))
+    return render_template("edit_category.html", category=category)
