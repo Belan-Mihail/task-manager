@@ -5,8 +5,9 @@ from taskmanager.models import Category, Task
 
 @app.route("/")
 def home():
-    return render_template("tasks.html")
-
+    tasks = list(Task.query.order_by(Task.id).all())
+    return render_template("tasks.html", tasks=tasks)
+# all like def categories():
 
 @app.route("/categories")
 def categories():
@@ -71,3 +72,80 @@ def edit_category(category_id):
         db.session.commit()
         return redirect(url_for("categories"))
     return render_template("edit_category.html", category=category)
+
+
+# This function needs to know which particular category we would like to delete from the data base.
+# Let's actually copy a few things from the 'edit' function above.
+# First, we need to pass the category ID into our app route and function, and once again,
+# we are casting it as an integer.
+# Next, we should attempt to query the Category table using this ID, and store it inside of a variable called 'category'.
+@app.route("/delete_category/<int:category_id>")
+def delete_category(category_id):
+    category = Category.query.get_or_404(category_id)
+    db.session.delete(category)
+    db.session.commit()
+    return redirect(url_for("categories"))
+
+
+
+@app.route("/add_task", methods=["GET", "POST"])
+def add_task():
+    categories = list(Category.query.order_by(Category.category_name).all())
+    if request.method == "POST":
+        task = Task(
+            task_name=request.form.get("task_name"),
+            task_description=request.form.get("task_description"),
+            is_urgent=bool(True if request.form.get("is_urgent") else False),
+            due_date=request.form.get("due_date"),
+            category_id=request.form.get("category_id")
+        )
+        db.session.add(task)
+        db.session.commit()
+        return redirect(url_for("home"))
+    return render_template("add_task.html", categories=categories)
+
+
+
+
+# @app.route("/add_task", methods=["GET", "POST"])
+# def add_task():
+
+# If you recall from the video where we designed our database schema, each task actually requires
+# the user to select a category for that task.
+# In order to do that, we first need to extract a list of all of the categories available from the database.
+#     categories = list(Category.query.order_by(Category.category_name).all())
+
+
+# From our models.py file, each task must have a few different elements, including a task
+# name, description, due date, category, and whether or not it's urgent.
+# That means we need to update the POST method to reflect each of the fields that will be
+# added from the form that we will create shortly.
+
+# Task name will be set to the form's name attribute of 'task_name'.
+# Task description will use the form's 'task_description' field
+# The 'is_urgent' field will be a Boolean, either true or false, so we'll make it True if the
+# form data is toggled on, otherwise it will be set to False by default.
+# Due date will of course be the form's 'due_date' input box.
+# Then finally, the last column for each Task will be the selected Category ID, which will
+# be generated as a dropdown list to choose from, using the 'categories' list above.
+#     if request.method == "POST":
+#         task = Task(
+#             task_name=request.form.get("task_name"),
+#             task_description=request.form.get("task_description"),
+#             is_urgent=bool(True if request.form.get("is_urgent") else False),
+#             due_date=request.form.get("due_date"),
+#             category_id=request.form.get("category_id")
+#         )
+
+# Once the form is submitted, we can add that new 'task' variable to the database session,
+# and then immediately commit those changes to the database.
+# If successful, then we can redirect the user back to the 'home' page where each task will eventually be displayed.
+#         db.session.add(task)
+#         db.session.commit()
+#         return redirect(url_for("home"))
+
+# This should render the template for "add_task.html", and in order for the dropdown list to display
+# each available category, we need to pass that variable into the template.
+# As a reminder, the first 'categories' listed is the variable name that we will be able
+# to use on the template itself.
+#     return render_template("add_task.html", categories=categories)

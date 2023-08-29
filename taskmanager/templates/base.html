@@ -26,7 +26,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer">
                 <li><a href="{{ url_for('home')}}">Home</a></li>
                 <!-- Again, using this approach is very important, so if you only type href="base.html", then
 your project won't compile properly by Flask, and you'll likely get an error. -->
-                <li><a href="">New Task</a></li>
+                <li><a href="{{ url_for('add_task') }}">New Task</a></li>
                 <li><a href="{{ url_for('categories')}}">Categories</a></li>
               </ul>
             </div>
@@ -34,7 +34,7 @@ your project won't compile properly by Flask, and you'll likely get an error. --
         
           <ul class="sidenav" id="mobile-demo">
             <li><a href="{{ url_for('home')}}">Home</a></li>
-            <li><a href="">New Task</a></li>
+            <li><a href="{{ url_for('add_task') }}">New Task</a></li>
             <li><a href="{{ url_for('categories')}}">Categories</a></li>
           </ul>
     </header>

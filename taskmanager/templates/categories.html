@@ -42,7 +42,7 @@ unique, it's best to use the primary key of the ID.
 I'm going to call this 'category_id', and we can now set that equal to the current 'category.id' using dot-notation again.
 Since we originally added the 'Travel' category as the first record on our database, its ID will be '1'. -->
           <a href="{{ url_for('edit_category', category_id=category.id) }}" class="btn green accent-4">Edit</a>
-          <a href="#" class="btn red">Delete</a>
+          <a href="{{ url_for('delete_category', category_id=category.id) }}" class="btn red">Delete</a>
         </div>
       </div>
     </div>
